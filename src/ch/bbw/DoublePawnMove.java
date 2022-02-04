@@ -11,8 +11,8 @@ public class DoublePawnMove extends Move {
 
     @Override
     public void MoveMove(ChessBoard board) {
-        super.MoveMove(board);
         board.setEnPassantPosition(enPassantPos);
         board.setEnPassantFigure(board.getBoard().getOrDefault(getFrom(), null));
+        super.MoveMove(board);
     }
 }

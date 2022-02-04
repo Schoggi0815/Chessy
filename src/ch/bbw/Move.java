@@ -12,11 +12,32 @@ public class Move {
     public void MoveMove(ChessBoard board){
         board.setWhiteTurn(!board.isWhiteTurn());
         ChessFigure chessFigure = board.getBoard().getOrDefault(from, null);
-        board.getBoard().remove(chessFigure.pos);
+        board.getBoard().remove(from);
         board.getBoard().remove(to);
         board.getBoard().put(to, chessFigure);
         chessFigure.pos = to;
         board.setEnPassantPosition(null);
+
+        if (from.equals(new Vector2(0, 0))) {
+            board.setCastleWhiteQueen(false);
+        }
+        if (from.equals(new Vector2(7, 0))) {
+            board.setCastleWhiteKing(false);
+        }
+        if (from.equals(new Vector2(0, 7))){
+            board.setCastleBlackQueen(false);
+        }
+        if (from.equals(new Vector2(7, 7))){
+            board.setCastleBlackKing(false);
+        }
+        if (from.equals(new Vector2(4, 0))){
+            board.setCastleWhiteKing(false);
+            board.setCastleWhiteQueen(false);
+        }
+        if (from.equals(new Vector2(4, 7))){
+            board.setCastleBlackKing(false);
+            board.setCastleBlackQueen(false);
+        }
     }
 
     public Vector2 getFrom() {

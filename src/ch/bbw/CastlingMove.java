@@ -22,3 +22,4 @@ public class CastlingMove extends Move {
         rook.pos = rookTo;
     }
 }
+

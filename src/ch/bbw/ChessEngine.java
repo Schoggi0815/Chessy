@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class ChessEngine {
-    public ChessBoard board = new ChessBoard();
-
-    public ArrayList<Move> getAllPossibleMoves(){
-        return getAllPossibleMoves(board, true);
-    }
-
     public ArrayList<Move> getAllPossibleMoves(ChessBoard board, boolean checkForChess){
         ArrayList<Move> moves = new ArrayList<>();
 
@@ -22,7 +16,7 @@ public class ChessEngine {
         });
 
         if (board.isWhiteTurn()){
-            if (board.isCastleWhiteKing()){
+            if (board.isCastleWhiteKing() && !board.getBoard().containsKey(new Vector2(6, 0)) && !board.getBoard().containsKey(new Vector2(7, 0))){
                 moves.add(new CastlingMove(
                     new Vector2(4, 0),
                     new Vector2(6, 0),
@@ -31,7 +25,7 @@ public class ChessEngine {
                 ));
             }
 
-            if (board.isCastleWhiteQueen()){
+            if (board.isCastleWhiteQueen() && !board.getBoard().containsKey(new Vector2(2, 0)) && !board.getBoard().containsKey(new Vector2(3, 0))){
                 moves.add(new CastlingMove(
                         new Vector2(4, 0),
                         new Vector2(2, 0),
@@ -41,21 +35,21 @@ public class ChessEngine {
             }
         }
         else {
-            if (board.isCastleBlackKing()){
+            if (board.isCastleBlackKing() && !board.getBoard().containsKey(new Vector2(6, 7)) && !board.getBoard().containsKey(new Vector2(7, 7))){
                 moves.add(new CastlingMove(
-                        new Vector2(4, 8),
-                        new Vector2(6, 8),
-                        new Vector2(7, 8),
-                        new Vector2(5, 8)
+                        new Vector2(4, 7),
+                        new Vector2(6, 7),
+                        new Vector2(7, 7),
+                        new Vector2(5, 7)
                 ));
             }
 
-            if (board.isCastleBlackQueen()){
+            if (board.isCastleBlackQueen() && !board.getBoard().containsKey(new Vector2(2, 7)) && !board.getBoard().containsKey(new Vector2(3, 7))){
                 moves.add(new CastlingMove(
-                        new Vector2(4, 8),
-                        new Vector2(2, 8),
-                        new Vector2(0, 8),
-                        new Vector2(3, 8)
+                        new Vector2(4, 7),
+                        new Vector2(2, 7),
+                        new Vector2(0, 7),
+                        new Vector2(3, 7)
                 ));
             }
         }
@@ -67,17 +61,13 @@ public class ChessEngine {
         ArrayList<Move> allPossibleMoves = new ArrayList<>();
 
         for (Move move : moves) {
-            ChessBoard chessBoard = MoveOnNewBoard(move);
+            ChessBoard chessBoard = MoveOnNewBoard(move, board);
             if (!isInChess(chessBoard)){
                 allPossibleMoves.add(move);
             }
         }
 
         return allPossibleMoves;
-    }
-
-    public void Move(Move move){
-        move.MoveMove(board);
     }
 
     public boolean isInChess(ChessBoard board){
@@ -98,13 +88,6 @@ public class ChessEngine {
         return false;
     }
 
-    public ChessBoard MoveOnNewBoard(Move move){
-        ChessBoard clone = board.clone();
-        move.MoveMove(clone);
-
-        return clone;
-    }
-
     public ChessBoard MoveOnNewBoard(Move move, ChessBoard board){
         ChessBoard clone = board.clone();
         move.MoveMove(clone);
@@ -112,11 +95,12 @@ public class ChessEngine {
         return clone;
     }
 
-    public void loadGame(String fenString){
+    public ChessBoard loadGame(String fenString){
+        ChessBoard board = new ChessBoard();
         String[] strings = fenString.split(" ");
 
         // Positions
-        loadPositions(strings[0]);
+        loadPositions(strings[0], board);
 
         // Turn
         board.setWhiteTurn(strings[1].equals("w"));
@@ -139,10 +123,8 @@ public class ChessEngine {
             board.setEnPassantPosition(new Vector2(x, y));
             board.setEnPassantFigure(board.getBoard().get(new Vector2(y == 6 ? 5 : 4, x)));
         }
-    }
 
-    public void printGameToConsole(){
-        printGameToConsole(board);
+        return board;
     }
 
     public static void printGameToConsole(ChessBoard board){
@@ -172,7 +154,7 @@ public class ChessEngine {
         System.out.println("En Passant: " + (board.getEnPassantFigure() == null ? "-" : board.getEnPassantPosition().toTextPos()));
     }
 
-    private void loadPositions(String positionsString){
+    private void loadPositions(String positionsString, ChessBoard board){
         String[] lines = positionsString.split("/");
 
         int lineIndex = 0;
