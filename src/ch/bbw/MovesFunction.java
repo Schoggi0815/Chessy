@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 @FunctionalInterface
 public interface MovesFunction {
-    Vector2[] GetPossibleMoves(ChessFigure figure, );
+    ArrayList<Move> GetPossibleMoves(ChessFigure figure, ChessBoard board);
 }

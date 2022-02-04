@@ -12,6 +12,22 @@ public class ChessBoard {
     private Vector2 enPassantPosition;
     private ChessFigure enPassantFigure;
 
+    public ChessBoard clone(){
+        ChessBoard chessBoard = new ChessBoard();
+        HashMap<Vector2, ChessFigure> newBoard = new HashMap<>();
+        board.forEach((vector2, figure) -> newBoard.put(vector2, figure.clone()));
+        chessBoard.board = newBoard;
+        chessBoard.whiteTurn = whiteTurn;
+        chessBoard.castleWhiteKing = castleWhiteKing;
+        chessBoard.castleWhiteQueen = castleWhiteQueen;
+        chessBoard.castleBlackKing = castleBlackKing;
+        chessBoard.castleBlackQueen = castleBlackQueen;
+        chessBoard.enPassantPosition = enPassantPosition;
+        chessBoard.enPassantFigure = enPassantFigure == null ? null : enPassantFigure.clone();
+
+        return chessBoard;
+    }
+
     public HashMap<Vector2, ChessFigure> getBoard() {
         return board;
     }
